@@ -131,3 +131,54 @@ husky.call('woof'); // => Husky woof
 （1）如果在子类的原型方法中使用super，那么super指向父类的原型。
 
 （2）如果在子类的静态方法中使用super，那么super指向父类。
+
+# 构造函数与原型
+
+**创建对象的方式：**
+
+```javascript
+// 1、使用 new Object() 创建对象
+var person = new Object();
+person.name = 'Gates';
+person.sayName = function() {
+  console.log(this.name);
+};
+
+// 2、使用对象字面量创建对象（现在首选方式）
+var person = {
+  name: 'Gates',
+  sayName: function() {
+    console.log(this.name);
+  }
+}
+
+// 3、利用构造函数创建对象
+```
+
+**构造函数**
+
+```javascript
+// 按照惯例，构造函数始终都应该以一个大写字母开头
+function Person(name) {
+  this.name = name;
+  this.sayName = function() {
+    console.log(this.name);
+  };
+}
+
+/* 要创建Person的新实例，必须使用new操作符。以这种方式调用构造函数实际上会经历4个步骤：
+1、创建一个新对象；
+2、将构造函数的作用域赋给新对象（因此this就指向了这个新对象）;
+3、执行构造函数中的代码（为这个新对象添加属性）;
+4、返回新对象（所以构造函数里面不需要return）。
+*/
+var person = new Person('Gates');
+```
+
+**原型**
+
+每个函数都有一个**prototype（原型）属性**，这个属性是一个指针，指向一个对象，而这个对象的用途是**包含可以由特定类型的所有实例共享的属性和方法**。字面意思理解是，prototype是通过调用构造函数而创建的那个对象实例的**原型对象**。使用原型对象的好处是可以让所有对象实例共享它所包含的属性和方法。
+
+在默认情况下，所有原型对象都会自动获得一个**constructor（构造函数）属性**，这个属性是一个指向prototype属性所在函数的指针。
+
+当调用构造函数创建一个新实例后，该实例的内部将包含一个指针（内部属性），指向构造函数的原型对象。ES5中管这个指针叫**[[Prototype]]**。虽然在脚本中没有标准的方式访问[[Prototype]]，但是Firefox，Safari，Chrome在每个对象上都支持一个属性**`__proto__`**；而在其他实现中，这个属性对脚本则是完全不可见的。
